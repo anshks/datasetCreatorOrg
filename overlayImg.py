@@ -3,6 +3,7 @@ import numpy as np
 import cv2
 import argparse
 import os
+import random
 
 # construct the argument parser and parse input image arguent
 ap = argparse.ArgumentParser()
@@ -31,14 +32,17 @@ def auto_canny(image, sigma=0.33):
 # images
 edged = auto_canny(gray)
 
-cnt = cv2.findContours(edged.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+blur = cv2.GaussianBlur(edged,(5,5),0)
+
+cnt = cv2.findContours(blur.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 cnt = cnt[1]
 output = image.copy()
 
 height = bg.shape[0]
 width = bg.shape[1]
 
-x,y,w,h = cv2.boundingRect(cnt)
+for c in cnt:
+	x,y,w,h = cv2.boundingRect(c)
 
 x1=random.randrange(0, width-w)
 y1=random.randrange(0, height-h)
